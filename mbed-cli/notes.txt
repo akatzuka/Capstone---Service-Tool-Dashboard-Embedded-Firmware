@@ -1,0 +1,35 @@
+Compile: mbed compile -t GCC_ARM -m auto
+
+-t flag is for toolchain, in our usage: GCC_ARM
+-m flag is target, uses auto as Mbed CLI detects the connected device: auto
+
+Bootloader:
+
+Source file located in /src
+Size is defined in mbed_app.json as 0x20000, this size is important as it:
+
+-Restricts the bootloader code from growing larger than the specified size.
+-Pads the output image to exactly the size specified.
+-Defines the symbols APPLICATION_ADDR, APPLICATION_SIZE, POST_APPLICATION_ADDR, POST_APPLICATION_SIZE
+
+The POST_APPLICATION_ADDR symbol is important as it is called by the bootloader to run the main program
+Bootloader image is named bootloader.bin
+
+To build, run the compile command in the mbed-cli program root
+
+Firmware:
+
+Source files located in /src
+Bootloader image located in /bootloader
+Bootloader image is defined in mbed_app.json in the target_override section: "target.bootloader_img": "bootloader/bootloader.bin"
+
+At the end of building, the build image is automatically combined with the bootloader to create the final image.
+Final image name: firmware.bin
+
+To build, run the compile command in the mbed-cli program root
+
+Misc:
+
+-Bootloader and firmware MUST BOTH be compiled using mbed-cli for program to run properly
+-Nucleo board MUST be connected while build happens, as it is the required target
+-As of right now, the bootloader image MUST be copied from the bootloader project build into the firmware project's bootloader folder
